@@ -1,0 +1,652 @@
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>PD</title>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+        <style>
+
+            html, body {
+                /*height: 100%;*/
+                position: relative;
+            }
+            ::-webkit-input-placeholder {
+                color: rgba(97,97,97,0.8) !important;
+                font-size: 16px;
+            }
+
+            :-moz-placeholder {
+                color: rgba(97,97,97,0.8) !important;
+                font-size: 16px;
+            }
+
+            ::-moz-placeholder {
+                color: rgba(97,97,97,0.8) !important;
+                font-size: 16px;
+            }
+
+            :-ms-input-placeholder {
+                color: rgba(97,97,97,0.8) !important;
+                font-size: 16px;
+            }
+            .pd_booking_widget_wrapper{
+                height: 100%;
+            }
+            .pd_booking_widget_sub_wrapper{
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+            .pd_booking_widget_frm_wrapper{
+                max-width: 500px;
+                margin: auto;
+            }
+
+            .pd_booking_widget_frm_wrapper .form-group{
+                margin-bottom: 0;
+            }
+            .pd_booking_widget_frm_wrapper .form-group label{
+                font-size: 16px;
+                color: #616161;
+                font-weight: 600;
+                padding-left: 35px;
+            }
+            .pd_booking_widget_frm_bg_com{
+                background: #f0f2f7;
+                padding: 8px 10px;
+                margin-bottom: 10px;
+                border-radius: 5px;
+            }
+
+            .pd_booking_frm_input_com_wrapper{
+                display: table;
+                width: 100%;
+            }
+            .pd_booking_frm_input_com_wrapper span{
+                display: table-cell;
+                vertical-align: middle;
+            }
+            .pd_booking_frm_input_com_wrapper span:nth-child(1){
+                width: 5%;
+            }
+            .pd_booking_frm_input_com_wrapper span:nth-child(2){
+                width: 95%;
+                padding-left: 10px;
+            }
+            .pd_booking_frm_input_com_wrapper span:nth-child(1) img{
+                width: 25px;
+            }
+
+            .pd_booking_frm_input_com_wrapper .form-control{
+                border: none;
+                background: #f0f2f7;
+                box-shadow: none;
+                color: rgba(97,97,97,0.8);
+                font-size: 16px;
+            }
+
+            .pd_vehicle_type_wrapper ul{
+                padding: 0;
+            }
+            .pd_vehicle_type_wrapper ul li{
+                list-style: none;
+                display: inline-block;
+                text-align: center;
+                width: 24%;
+                margin-top: 12px;
+                margin-bottom: 32px;
+                /*padding: 0px 28px;*/
+            }
+            .pd_vechile_img_wrapper{
+                border: 2px solid;
+                border-color: transparent;
+                border-radius: 50px;
+                padding: 3px;
+                max-width: 63px;
+                margin: auto;
+            }
+            .pd_vechile_img_sub_wrapper{
+                border: 3px solid #f0f2f7;
+                border-radius: 50px;
+                padding: 1px;
+            }
+            .pd_vechile_img_sub_wrapper img{
+                width: 45px;
+                border: 3px solid #f0f2f7;
+                border-radius: 40px;
+                padding: 5px;
+            }
+            .pd_booking_widget_get_quote_style{
+                background: #161616;
+                color: #FFF;
+                font-size: 18px;
+                font-weight: 500;
+                padding: 10px 30px;
+            }
+            .pd_booking_widget_get_quote_style:hover{
+                color: #d1ac3c;
+            }
+            .pd_booking_widget_get_quote_style:focus,
+            .pd_booking_widget_get_quote_style:active{
+                outline: none !important;
+                color: #d1ac3c;
+            }
+
+            .pd_vechile_title_text{
+                font-size: 12px;
+                color: #161616;
+                font-weight: 700;
+                margin-top: 10px;
+                max-width: 100px;
+            }
+
+            .help-block,
+            .error{
+                color: #a94442 !important;
+                font-size: 12px !important;
+                padding-left: 35px !important;
+                font-style: normal !important;
+            }
+
+            /*------------ Custom Check box and ratio button------------*/
+            .checkboxft {
+                display: none;
+            }
+            .customcheckbox input[type="checkbox"]+span, .customcheckbox input[type="radio"]+span {
+                cursor: pointer;
+            }
+
+
+            .customcheckbox input[type="checkbox"],
+            .customcheckbox input[type="radio"] {
+                vertical-align: middle;
+                opacity: 0;
+            }
+
+            .customcheckbox input[type="radio"]:checked ~ .pd_vechile_content_wrapper > .pd_vechile_img_wrapper{
+                border-color:#d1ac3c;
+            }
+
+            /*------------ End------------*/
+
+            @media (max-width: 767px) {
+                .pd_vehicle_type_wrapper ul li {
+                    width: 23%;
+                }
+            }
+            @media (max-width: 575px) {
+                .pd_vehicle_type_wrapper ul li {
+                    margin-bottom: 15px;
+                }
+            }
+        </style>
+
+
+    </head>
+    <body>
+
+            <div class="pd_booking_widget_wrapper">
+
+            <div class="pd_booking_widget_sub_wrapper">
+
+
+                <div class="container">
+
+                    <div class="pd_booking_widget_frm_wrapper">
+
+                        <form enctype="multipart/form-data" class="pd-widget-frm" id="pd-widget-frm" novalidate="novalidate" role="form" method="post" autocomplete="off">
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+
+                                    <div class="pd_booking_widget_frm_bg_com pd_booking_widget_frm_from_add_wrapper">
+
+                                        <div class="form-group">
+                                            <label for="from_add">Fra</label>
+                                            <div class="pd_booking_frm_input_com_wrapper">
+                                                <span>
+                                                    <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_from.png" alt="from icon" />
+                                                </span>
+                                                <span>
+                                                    <input type="text" name="from_add" id="from_add" value="" class="form-control required pd_widget_frm_com_ele" autocomplete="off" placeholder="Fra adresse">
+
+                                                    <div class="hide">
+                                                        <input name="from_add_latitude" id="from_add_latitude" type="hidden"  />
+                                                        <input name="from_add_longitude" id="from_add_longitude" type="hidden"  />
+                                                        <input name="from_add_zipcode" id="from_add_zipcode" type="hidden"  />
+                                                    </div>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12">
+
+                                    <div class="pd_booking_widget_frm_bg_com pd_booking_widget_frm_to_add_wrapper">
+
+                                        <div class="form-group">
+                                            <label for="to_add">Til</label>
+                                            <div class="pd_booking_frm_input_com_wrapper">
+                                                <span>
+                                                    <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_to.png" alt="to icon" />
+                                                </span>
+                                                <span>
+                                                    <input type="text" name="to_add" id="to_add" value="" class="form-control required pd_widget_frm_com_ele" autocomplete="off" placeholder="Til adresse">
+                                                    <div class="hide">
+                                                        <input name="to_add_latitude" id="to_add_latitude" type="hidden"  />
+                                                        <input name="to_add_longitude" id="to_add_longitude" type="hidden"  />
+                                                        <input name="to_add_zipcode" id="to_add_zipcode" type="hidden"  />
+                                                    </div>
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12">
+
+                                    <div class="pd_booking_widget_frm_bg_com pd_booking_widget_frm_book_date_wrapper">
+
+                                        <div class="form-group">
+                                            <label for="book_date">Dato</label>
+                                            <div class="pd_booking_frm_input_com_wrapper">
+                                                <span>
+                                                    <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_calendar.png" alt="calendar" />
+                                                </span>
+                                                <span>
+                                                    <input type="text" name="book_date" id="book_date" value="" class="form-control required pd_widget_frm_com_ele" autocomplete="off" placeholder="Dato">
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12">
+
+                                    <div class="pd_booking_widget_frm_bg_com pd_booking_widget_frm_book_time_wrapper">
+
+                                        <div class="form-group">
+                                            <label for="book_time">Tid</label>
+                                            <div class="pd_booking_frm_input_com_wrapper">
+                                                <span>
+                                                    <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_clock.png" alt="time" />
+                                                </span>
+                                                <span>
+                                                    <input type="text" name="book_time" id="book_time" value="" class="form-control required pd_widget_frm_com_ele" autocomplete="off" placeholder="Tid">
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12">
+
+                                    <div class="pd_vehicle_type_wrapper">
+
+                                        <ul>
+                                            <li class="customcheckbox">
+
+                                                <label class="pd_vechile_lable_wrapper">
+                                                    <input type="radio" name="pd_vehicle_type" class="checkboxft" value="BS" checked>
+                                                    <div class="pd_vechile_content_wrapper">
+                                                        <div class="pd_vechile_img_wrapper">
+                                                            <div class="pd_vechile_img_sub_wrapper">
+                                                                <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_model_x.svg" class="img-responsive">
+                                                            </div>
+                                                        </div>
+                                                        <div class="pd_vechile_title_text">Business Class (Tesla)</div>
+                                                    </div>
+                                                </label>
+
+
+                                            </li>
+
+                                            <li class="customcheckbox">
+
+                                                <label class="pd_vechile_lable_wrapper">
+                                                    <input type="radio" name="pd_vehicle_type" class="checkboxft" value="FC">
+                                                    <div class="pd_vechile_content_wrapper">
+                                                        <div class="pd_vechile_img_wrapper">
+                                                            <div class="pd_vechile_img_sub_wrapper">
+                                                                <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_s_class.svg" class="img-responsive">
+                                                            </div>
+                                                        </div>
+                                                        <div class="pd_vechile_title_text">First Class (SClass)</div>
+                                                    </div>
+                                                </label>
+
+
+                                            </li>
+
+                                            <li class="customcheckbox">
+
+                                                <label class="pd_vechile_lable_wrapper">
+                                                    <input type="radio" name="pd_vehicle_type" class="checkboxft" value="LU">
+                                                    <div class="pd_vechile_content_wrapper">
+                                                        <div class="pd_vechile_img_wrapper">
+                                                            <div class="pd_vechile_img_sub_wrapper">
+                                                                <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_v_class.svg" class="img-responsive">
+                                                            </div>
+                                                        </div>
+                                                        <div class="pd_vechile_title_text">Luxury Class (Viano)</div>
+                                                    </div>
+                                                </label>
+
+
+                                            </li>
+
+                                            <li class="customcheckbox">
+
+                                                <label class="pd_vechile_lable_wrapper">
+                                                    <input type="radio" name="pd_vehicle_type" class="checkboxft" value="MB">
+                                                    <div class="pd_vechile_content_wrapper">
+                                                        <div class="pd_vechile_img_wrapper">
+                                                            <div class="pd_vechile_img_sub_wrapper">
+                                                                <img src="https://privatedriver.s3-eu-west-1.amazonaws.com/app_images/ic_mini_bus.svg" class="img-responsive">
+                                                            </div>
+                                                        </div>
+                                                        <div class="pd_vechile_title_text">Minibus (Sprinter)</div>
+                                                    </div>
+                                                </label>
+
+
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    <div class="pd_booking_widget_get_quote_btn_wrapper">
+                                        <button name="bttnsubmit" type="button" class="btn btn-block btnSubmit pd_booking_widget_get_quote_style pd_booking_widget_get_quote_btn" id="bttnsubmit">Få tilbud</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false&libraries=places&language=en-AU&key=AIzaSyC-CU1xAddYPjqDwToIfi9WLYdqD7d2wN8"></script>
+        <script type="text/javascript">
+            var pickup_validaddress= 0;
+            var destination_validaddress= 0;
+
+            $.validator.setDefaults({
+                highlight: function(element) {
+                    $(element).closest('.form-group').addClass('has-error');
+                },
+                unhighlight: function(element) {
+                    // console.log(element);
+                    $(element).closest('.form-group').removeClass('has-error');
+                    $(element).closest('.input-group').removeClass('has-error');
+
+                },
+
+                errorElement: 'span',
+                errorClass: 'help-block',
+                errorPlacement: function(error, element) {
+                    //console.log($(element).attr('name'));
+                    if (element.parent('.input-group').length) {
+                        error.insertAfter($(element).parent());
+                    }else if ($(element).hasClass("pd_widget_frm_com_ele")) {
+                        error.insertAfter($(element).parent().parent());
+                    }else{
+                        error.insertAfter($(element));
+                    }
+                },
+                invalidHandler: function(form, validator) {
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        validator.errorList[0].element.focus();
+                    }
+                },
+
+            });
+
+            $(document).ready(function(e) {
+
+                $('#book_date').datetimepicker({
+                    //minView: 2,
+                    //startDate : new Date(),
+                    format: 'DD/MM/YYYY',
+                    minDate: new Date()
+                });
+
+                $('#book_time').datetimepicker({
+                    format: 'H:mm',
+                });
+
+                GeoLocation('from_add','from_add');
+                GeoLocation('to_add','to_add');
+
+            });
+
+            function GeoLocation(inputboxId, type) {
+
+                var options = {
+
+                };
+                var picklocation = document.getElementById(inputboxId);
+                var autocomplete = new google.maps.places.Autocomplete(picklocation, options);
+                autocomplete.addListener('place_changed', function() {
+                    var place = autocomplete.getPlace();
+
+                    if (!place.geometry) {
+
+                    }
+
+                    checkAddressValid(place, type);
+
+                    $("#" + type + "_latitude").val(place.geometry.location.lat());
+                    $("#" + type + "_longitude").val(place.geometry.location.lng());
+
+                    pickup_latitude = $("#pickup_latitude").val();
+                    pickup_longitude = $("#pickup_longitude").val();
+                    destination_latitude = $("#destination_latitude").val();
+                    destination_longitude = $("#destination_longitude").val();
+
+                });
+            }
+            function checkAddressValid(place, type) {
+
+
+                $(".pd_booking_widget_get_quote_btn").attr("disabled",true);
+                var checksearch = 0;
+                if (place.types) {
+                    var place_types = place.types;
+                    if (place_types.length == 1) {
+                        var type_value = place_types[0];
+
+                        if (type_value == 'route' || type_value == 'geocode') {
+                            checksearch = 1;
+
+                        }
+
+                    } else if (place_types.length == 2) {
+                        var type_value1 = place_types[0];
+                        var type_value2 = place_types[1];
+                        if ((type_value1 == 'route' && type_value2 == 'geocode' ) || (type_value1 == 'country' && type_value2 == 'political') || (type_value1 == 'political' || type_value2 == 'political')) {
+
+                            checksearch = 1;
+                        }
+                    } else if (place_types.length == 3) {
+                        var type_value1 = place_types[0];
+                        var type_value2 = place_types[1];
+                        var type_value3 = place_types[2];
+
+                        if (type_value2 == 'political' && type_value3 == 'geocode') {
+                            if (type_value1 == 'sublocality' || type_value1 == 'locality' || type_value1 == 'country') {
+                                checksearch = 1;
+                            }
+                        }
+                    } else {
+                        checksearch = 0;
+                        callZipAPI(place.formatted_address, type);
+                    }
+                    if (checksearch == 1) {
+                        address_error(type);
+                    } else {
+                        address_success(type);
+                        callZipAPI(place.formatted_address, type);
+                    }
+                }
+            }
+            function callZipAPI(addSearchZip, type) {
+
+                var geocoder = new google.maps.Geocoder();
+                var zipCode = null;
+
+                geocoder.geocode({
+                    'address' : addSearchZip
+                }, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+
+                        var addressComponent = results[0].address_components;
+                        for (var x = 0; x < addressComponent.length; x++) {
+                            var chk = addressComponent[x];
+                            if (chk.types[0] == 'postal_code') {
+                                zipCode = chk.long_name;
+                            }
+                        }
+                        if (zipCode) {
+
+                            $("#" + type + '_zipcode').val(zipCode);
+
+                        } else {
+                            // alert('No result found!!');
+                        }
+                    } else {
+                        // alert('Enter proper address!!');
+                    }
+                });
+            }
+
+            function address_success(type) {
+
+                if (type === 'from_add') {
+                    pickup_validaddress=1;
+                    remove_address_error('pickup',type);
+                    $("#pickup_location").css("background-color", "#dde3ec");
+                    $("#pickup_location").css("border", "1px solid #dde3ec");
+                    if(destination_validaddress==1){
+                        $(".pd_booking_widget_get_quote_btn").removeAttr("disabled");
+                    }
+                    //web_notification("Please enter a valid destination address",'success');
+                } else {
+                    destination_validaddress=1;
+                    remove_address_error('destination',type);
+                    //web_notification("Please enter a valid destination address",'success');
+                    $("#destination_location").css("background-color", "#dde3ec");
+                    $("#destination_location").css("border", "1px solid #dde3ec");
+                    if(pickup_validaddress==1){
+                        $(".pd_booking_widget_get_quote_btn").removeAttr("disabled");
+                        //$(".booklater").removeAttr("disabled");
+                    }
+                }
+            }
+
+            function address_error(type) {
+
+
+                $(".pd_booking_widget_get_quote_btn").attr("disabled",true);
+                //$(".booklater").attr("disabled",true);
+
+                $("#" + type + "_latitude").val('');
+                $("#" + type + "_longitude").val('');
+                if (type === 'from_add') {
+                    pickup_validaddress=0;
+                    show_address_error("Please add house number",'pickup',type);
+                    //web_notification("Please add a house number", 'danger');
+                    $("#"+type+"_location").parent().find(".form-control-feedback").removeClass('glyphicon-ok').addClass("glyphicon-remove");
+                    $("#"+type+"_location").parent().removeClass('has-success').addClass("has-error");
+                } else {
+
+                    destination_validaddress=0
+                    //web_notification("Please add a house number", 'danger');
+                    show_address_error("Please add house number",'destination',type);
+                    $("#"+type+"_location").parent().find(".form-control-feedback").removeClass('glyphicon-ok').addClass("glyphicon-remove");
+                    $("#"+type+"_location").parent().removeClass('has-success').addClass("has-error");
+                }
+            }
+
+            function remove_address_error(type,fieldName){
+
+                $("#"+fieldName).closest('.form-group').removeClass('has-error has-feedback');
+                $("#"+fieldName).closest('.form-group').addClass('has-success has-feedback');
+                $("#"+fieldName).closest('.form-group').remove('.error help-block');
+                $("#"+fieldName).closest('.form-group').find('.pd_booking_frm_input_com_wrapper').next().remove();
+                //$("#"+fieldName).closest('.form-group').find('span').remove();
+
+                $("#"+fieldName).closest('.form-group').append('<span class="glyphicon glyphicon-ok form-control-feedback"></span>');
+                $("#"+fieldName+"-error").remove();
+
+            }
+            function show_address_error(message,type,fieldName){
+
+
+                $("#"+fieldName).closest('.form-group').addClass('has-error has-feedback');
+                $("#"+fieldName).closest('.form-group').find('.pd_booking_frm_input_com_wrapper').next().remove();
+                $("#"+fieldName+"-error").remove();
+                $("#"+fieldName).closest('.form-group').append('<span class="glyphicon glyphicon-remove form-control-feedback"></span><em id="'+fieldName+'-error" class="error help-block">'+message+'</em>');
+
+
+            }
+            $(document).on('click','.pd_booking_widget_get_quote_btn',function (e) {
+
+                e.preventDefault();
+
+                var checkFrm = $('#pd-widget-frm').valid();
+                if(checkFrm===true){
+
+                    var formData=$('#pd-widget-frm').serialize();
+                    var fullUrl = 'https://booking.privatedriverapp.com/?';
+                    var finalUrl = fullUrl+formData;
+                    window.location.href = finalUrl;
+                }
+            });
+        </script>
+
+    </body>
+</html>
